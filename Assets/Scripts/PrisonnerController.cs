@@ -7,6 +7,8 @@ public class PrisonnerController : MonoBehaviour
 {
     public Inventory Inventory = new Inventory();
 
+    internal Vector3 Spawn;
+
     protected Rigidbody rb { private set; get; }
 
     public float MoveSpeed { get; } = 5f;
@@ -26,7 +28,7 @@ public class PrisonnerController : MonoBehaviour
 
     internal virtual void Init()
     {
-        transform.localPosition = new Vector3(-4, 0, -4);
+        transform.localPosition = Spawn;
         CanMove = true;
         Inventory = new Inventory();
     }

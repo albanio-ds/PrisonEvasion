@@ -7,6 +7,11 @@ public class EnvironmentController : MonoBehaviour
     public BoxController[] BoxControllers;
     public PrisonnerController PrisonnerController;
     public GuardController[] GuardControllers;
+    public Transform[] PlayerSpawns;
+
+    [SerializeField]
+    private GameObject[] GuardCheckpointScriptParent;
+
     private enum GameState { None, Playing, Lose, Win }
 
     GameState CurrGameState = GameState.None;
@@ -50,6 +55,10 @@ public class EnvironmentController : MonoBehaviour
                 PlayerUIController.Instance.MainText.color = Color.green;
                 Debug.Log("player win !");
                 CurrGameState = GameState.Win;
+            }
+            else
+            {
+                PlayerUIController.Instance.MainText.text = "You must find a key first.";
             }
         }
     }
@@ -106,13 +115,12 @@ public class EnvironmentController : MonoBehaviour
         {
             BoxControllers[i].HaveKey = i == selected;
         }
-        Transform[] checkpts = transform.GetComponentsInChildren<GuardCheckpointScript>().Select(guard => guard.transform).ToArray();
-        uint index = 0;
-        foreach (var guard in GuardControllers)
+        for (int i = 0; i < GuardCheckpointScriptParent.Length; i++)
         {
-            guard.Init(checkpts, index);
-            index++;
+            var checkpts = GuardCheckpointScriptParent[i].GetComponentsInChildren<Transform>().Select(guard => guard.transform).ToArray();
+            GuardControllers[i].Init(checkpts, (uint)Random.Range(0, checkpts.Length));
         }
+        PrisonnerController.Spawn = PlayerSpawns[Random.Range(0, PlayerSpawns.Length)].position;
         PrisonnerController.Init();
         CurrGameState = GameState.Playing;
     }
