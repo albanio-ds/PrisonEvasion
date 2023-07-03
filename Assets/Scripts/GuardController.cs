@@ -7,7 +7,7 @@ public class GuardController : MonoBehaviour
     public const float moveSpeed = 3f;
     public const float rotateSpeed = 5f;
     public Transform[] patrolPoints { private get; set; }
-    public const float detectionDistance = 5f;
+    public const float detectionDistance = 15f;
 
     private int currentPoint = 0;
 
@@ -40,14 +40,15 @@ public class GuardController : MonoBehaviour
 
             MovementProcess();
 
-            if (Physics.Raycast(transform.localPosition, PlayerControllerInstance.transform.localPosition - transform.localPosition, out RaycastHit raycastHit, detectionDistance))
+            if (Physics.Raycast(transform.localPosition, (PlayerControllerInstance.transform.localPosition - transform.localPosition).normalized, out RaycastHit raycastHit, detectionDistance))
             //if (Vector3.Distance(transform.position, PlayerControllerInstance.transform.position) < detectionDistance)
             {
                 if (raycastHit.transform.CompareTag("Player"))
                 {
-                    if (Vector3.Dot(transform.forward, raycastHit.transform.localPosition - transform.localPosition) > .68f)
+                    if (Vector3.Dot(transform.forward, (raycastHit.transform.localPosition - transform.localPosition).normalized) > .55f)
                     {
-                        OnPlayerRepered?.Invoke(this, raycastHit.transform);
+                        Debug.Log("Found");
+                        //OnPlayerRepered?.Invoke(this, raycastHit.transform);
                     }
                 }
             }
