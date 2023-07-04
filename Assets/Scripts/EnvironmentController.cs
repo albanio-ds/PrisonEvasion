@@ -119,7 +119,7 @@ public class EnvironmentController : MonoBehaviour
         {
             BoxControllers[i].HaveKey = i == selected;
         }
-        for (int i = 0; i < GuardCheckpointScriptParent.Length; i++)
+        for (int i = 0; i < GuardControllers.Length; i++)
         {
             var checkpts = GuardCheckpointScriptParent[i].GetComponentsInChildren<Transform>(false).Where(curent => curent != GuardCheckpointScriptParent[i].transform) .Select(guard => guard.transform).ToArray();
             GuardControllers[i].Init(checkpts, (uint)Random.Range(0, checkpts.Length));
