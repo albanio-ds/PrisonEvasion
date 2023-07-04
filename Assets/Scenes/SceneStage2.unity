@@ -144,7 +144,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7396367099339844554, guid: 77907d38093be2e409cd1631430945b0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7396367099339844554, guid: 77907d38093be2e409cd1631430945b0, type: 3}
       propertyPath: m_LocalPosition.z
@@ -677,8 +677,8 @@ MonoBehaviour:
   PlayerSpawns:
   - {fileID: 7097500359997610692}
   GuardCheckpointScriptParent:
-  - {fileID: 1055291410}
-  - {fileID: 819477957}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!4 &694955705
 Transform:
   m_ObjectHideFlags: 0
