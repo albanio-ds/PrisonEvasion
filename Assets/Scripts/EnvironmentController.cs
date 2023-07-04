@@ -8,6 +8,7 @@ public class EnvironmentController : MonoBehaviour
     public PrisonnerController PrisonnerController;
     public GuardController[] GuardControllers;
     public Transform[] PlayerSpawns;
+    public SecurityCamera[] SecurityCameras;
 
     [SerializeField]
     private GameObject[] GuardCheckpointScriptParent;
@@ -21,6 +22,7 @@ public class EnvironmentController : MonoBehaviour
         BoxControllers = transform.GetComponentsInChildren<BoxController>();
         PrisonnerController = transform.GetComponentInChildren<PrisonnerController>();
         GuardControllers = transform.GetComponentsInChildren<GuardController>();
+        SecurityCameras = transform.GetComponentsInChildren<SecurityCamera>();
         UnityEngine.Assertions.Assert.IsNotNull(BoxControllers);
         UnityEngine.Assertions.Assert.IsNotNull(PrisonnerController);
         UnityEngine.Assertions.Assert.IsNotNull(GuardControllers);
@@ -33,10 +35,19 @@ public class EnvironmentController : MonoBehaviour
         {
             item.OnPlayerRepered += OnPlayerReperedCallback;
         }
+        foreach (var item in SecurityCameras)
+        {
+            item.OnPlayerRepered += OnPlayerOnCameraCallback;
+        }
         transform.GetComponentInChildren<ExitScript>().OnPlayerLeaving += OnPlayerLeavingCallback;
 
         PlayerUIController.Instance.PlayButton.onClick.AddListener(InitGame);
         PlayerUIController.Instance.MainText.text = "";
+    }
+
+    private void OnPlayerOnCameraCallback(object sender, Transform e)
+    {
+        Debug.Log("On camera !!");
     }
 
     private void OnPlayerLeavingCallback(object sender, Transform player)
@@ -72,6 +83,10 @@ public class EnvironmentController : MonoBehaviour
         PrisonnerController.CanMove = false;
         CurrGameState = GameState.Lose;
         foreach (var item in GuardControllers)
+        {
+            item.PlayerGameOver();
+        }
+        foreach (var item in SecurityCameras)
         {
             item.PlayerGameOver();
         }
@@ -123,6 +138,10 @@ public class EnvironmentController : MonoBehaviour
         {
             var checkpts = GuardCheckpointScriptParent[i].GetComponentsInChildren<Transform>(false).Where(curent => curent != GuardCheckpointScriptParent[i].transform) .Select(guard => guard.transform).ToArray();
             GuardControllers[i].Init(checkpts, (uint)Random.Range(0, checkpts.Length));
+        }
+        for (int i = 0; i < SecurityCameras.Length; i++)
+        {
+            SecurityCameras[i].Init();
         }
         PrisonnerController.Spawn = PlayerSpawns[Random.Range(0, PlayerSpawns.Length)];
         PrisonnerController.Init();
