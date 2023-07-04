@@ -7,6 +7,8 @@ public class PrisonnerController : MonoBehaviour
 {
     public Inventory Inventory = new Inventory();
 
+    public EventHandler OnPlayerRunning;
+
     internal Transform Spawn;
 
     protected Rigidbody rb { private set; get; }
@@ -15,8 +17,14 @@ public class PrisonnerController : MonoBehaviour
 
     public bool CanMove { internal set; get; } = false;
 
+    protected bool IsRunning = false;
+    protected float RunStartDate;
+
     protected float horizontal;
     protected float vertical;
+
+    private const float RunStepFrequency = 0.15f;
+    private float RunLastUpdate;
 
     private void Start()
     {
@@ -31,6 +39,20 @@ public class PrisonnerController : MonoBehaviour
         transform.localPosition = Spawn.position;
         transform.localRotation = Quaternion.LookRotation(Spawn.forward);
         CanMove = true;
+        IsRunning = false;
         Inventory = new Inventory();
+    }
+
+    protected void BaseUpdate()
+    {
+        if (IsRunning)
+        {
+            if (Time.time - RunStartDate > RunStepFrequency && Time.time - RunLastUpdate > RunStepFrequency)
+            {
+                OnPlayerRunning?.Invoke(this, null);
+                RunLastUpdate = Time.time;
+                Debug.Log("Run sound");
+            }
+        }
     }
 }

@@ -34,6 +34,15 @@ public class PlayerController : PrisonnerController
             PlayerPlaying = !PlayerPlaying;
             Cursor.lockState = PlayerPlaying ? CursorLockMode.Locked : CursorLockMode.None;
         }
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            IsRunning = true;
+            RunStartDate = Time.time;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            IsRunning = false;
+        }
 
         if (PlayerPlaying)
         {
@@ -49,6 +58,7 @@ public class PlayerController : PrisonnerController
             newRotationX = Mathf.Clamp(newRotationX, 0, 90f);
             playerCamera.localRotation = Quaternion.Euler(newRotationX, 0f, 0f);
         }
+        base.BaseUpdate();
     }
 
     private void FixedUpdate()
@@ -59,7 +69,7 @@ public class PlayerController : PrisonnerController
             //Vector3 newPosition = rb.position + transform.TransformDirection(movement);
             //rb.MovePosition(newPosition);
             var moveDirection = new Vector3(horizontal, 0, vertical);
-            var globalMoveDirection = transform.TransformDirection(moveDirection) * MoveSpeed;
+            var globalMoveDirection = transform.TransformDirection(moveDirection) * MoveSpeed * (IsRunning ? 2 : 1);
             rb.velocity = new Vector3(globalMoveDirection.x, rb.velocity.y, globalMoveDirection.z);
         }
         else
