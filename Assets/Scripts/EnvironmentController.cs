@@ -71,7 +71,11 @@ public class EnvironmentController : MonoBehaviour
         }
         PrisonnerController.CanMove = false;
         CurrGameState = GameState.Lose;
-        Debug.Log("player found !");
+        foreach (var item in GuardControllers)
+        {
+            item.PlayerGameOver();
+        }
+        Debug.Log("Thread ID :"+System.Threading.Thread.CurrentThread.ManagedThreadId);
         PlayerUIController.Instance.MainText.text = "Lose !";
         PlayerUIController.Instance.PlayButton.gameObject.SetActive(true);
         PlayerUIController.Instance.MainText.color = Color.red;
@@ -117,10 +121,10 @@ public class EnvironmentController : MonoBehaviour
         }
         for (int i = 0; i < GuardCheckpointScriptParent.Length; i++)
         {
-            var checkpts = GuardCheckpointScriptParent[i].GetComponentsInChildren<Transform>().Select(guard => guard.transform).ToArray();
+            var checkpts = GuardCheckpointScriptParent[i].GetComponentsInChildren<Transform>(false).Where(curent => curent != GuardCheckpointScriptParent[i].transform) .Select(guard => guard.transform).ToArray();
             GuardControllers[i].Init(checkpts, (uint)Random.Range(0, checkpts.Length));
         }
-        PrisonnerController.Spawn = PlayerSpawns[Random.Range(0, PlayerSpawns.Length)].position;
+        PrisonnerController.Spawn = PlayerSpawns[Random.Range(0, PlayerSpawns.Length)];
         PrisonnerController.Init();
         CurrGameState = GameState.Playing;
     }

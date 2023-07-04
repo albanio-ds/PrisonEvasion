@@ -7,7 +7,7 @@ public class PrisonnerController : MonoBehaviour
 {
     public Inventory Inventory = new Inventory();
 
-    internal Vector3 Spawn;
+    internal Transform Spawn;
 
     protected Rigidbody rb { private set; get; }
 
@@ -28,7 +28,8 @@ public class PrisonnerController : MonoBehaviour
 
     internal virtual void Init()
     {
-        transform.localPosition = Spawn;
+        transform.localPosition = Spawn.position;
+        transform.localRotation = Quaternion.LookRotation(Spawn.forward);
         CanMove = true;
         Inventory = new Inventory();
     }

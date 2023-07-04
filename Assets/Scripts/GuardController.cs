@@ -26,7 +26,7 @@ public class GuardController : MonoBehaviour
         CanMove = true;
         currentPoint = (int)(index % checkpts.Length);
 
-        transform.localPosition = patrolPoints[index % checkpts.Length].localPosition;
+        transform.position = patrolPoints[index % checkpts.Length].position;
         // orientation initiale du garde vers la deuxième boîte
         Vector3 direction = patrolPoints[(index + 1) % checkpts.Length].position - transform.position;
         Quaternion lookRotation = Quaternion.LookRotation(direction);
@@ -40,15 +40,15 @@ public class GuardController : MonoBehaviour
 
             MovementProcess();
 
-            if (Physics.Raycast(transform.localPosition, (PlayerControllerInstance.transform.localPosition - transform.localPosition).normalized, out RaycastHit raycastHit, detectionDistance))
+            if (Physics.Raycast(transform.position, (PlayerControllerInstance.transform.position - transform.position).normalized, out RaycastHit raycastHit, detectionDistance))
             //if (Vector3.Distance(transform.position, PlayerControllerInstance.transform.position) < detectionDistance)
             {
                 if (raycastHit.transform.CompareTag("Player"))
                 {
-                    if (Vector3.Dot(transform.forward, (raycastHit.transform.localPosition - transform.localPosition).normalized) > .55f)
+                    if (Vector3.Dot(transform.forward, (raycastHit.transform.position - transform.position).normalized) > .55f)
                     {
-                        Debug.Log("Found");
-                        //OnPlayerRepered?.Invoke(this, raycastHit.transform);
+                        //Debug.Log("Found");
+                        OnPlayerRepered?.Invoke(this, raycastHit.transform);
                     }
                 }
             }
@@ -58,14 +58,14 @@ public class GuardController : MonoBehaviour
 
     private void MovementProcess()
     {// orientation du garde vers la prochaine boîte
-        Vector3 direction = patrolPoints[currentPoint].localPosition - transform.localPosition;
+        Vector3 direction = patrolPoints[currentPoint].position - transform.position;
         Quaternion lookRotation = Quaternion.LookRotation(direction);
 
         float angle = Quaternion.Angle(transform.localRotation, lookRotation);
         if (angle < 0.5f)
         {
-            transform.localPosition = Vector3.MoveTowards(transform.localPosition, patrolPoints[currentPoint].localPosition, moveSpeed * Time.deltaTime);
-            if (Vector3.Distance(transform.localPosition, patrolPoints[currentPoint].position) < 0.1f)
+            transform.position = Vector3.MoveTowards(transform.position, patrolPoints[currentPoint].position, moveSpeed * Time.deltaTime);
+            if (Vector3.Distance(transform.position, patrolPoints[currentPoint].position) < 0.1f)
             {
                 currentPoint++;
 
@@ -79,5 +79,11 @@ public class GuardController : MonoBehaviour
         {
             transform.localRotation = Quaternion.Slerp(transform.localRotation, lookRotation, Time.deltaTime * rotateSpeed);
         }
+    }
+
+    internal void PlayerGameOver()
+    {
+        CanMove = false;
+        transform.LookAt(PlayerControllerInstance.transform);
     }
 }
