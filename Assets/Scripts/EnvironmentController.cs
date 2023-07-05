@@ -44,7 +44,7 @@ public class EnvironmentController : MonoBehaviour
         }
         PrisonnerController.OnPlayerRunning += OnPlayerOnCameraCallback;
 
-        transform.GetComponentInChildren<ExitScript>().OnPlayerLeaving += OnPlayerLeavingCallback;
+        transform.GetComponentsInChildren<ExitScript>().ToList().ForEach(exit => exit.OnPlayerLeaving += OnPlayerLeavingCallback);
 
         if (SmartGuardAgent != null)
             SmartGuardAgent.OnPlayerRepered += OnPlayerReperedCallback;
