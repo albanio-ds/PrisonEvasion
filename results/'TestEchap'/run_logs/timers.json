@@ -1,0 +1,42 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1688486143",
+        "python_version": "3.7.9 (tags/v3.7.9:13c94747c7, Aug 17 2020, 16:30:00) [MSC v.1900 64 bit (AMD64)]",
+        "command_line_arguments": "C:\\Users\\alban\\OneDrive\\Documents\\Work\\M2\\PA\\PrisonEvasion\\venv\\Scripts\\mlagents-learn --resume --run-id='TestEchap'",
+        "mlagents_version": "0.29.0",
+        "mlagents_envs_version": "0.29.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "1.7.0+cu110",
+        "numpy_version": "1.21.2",
+        "end_time_seconds": "1688486229"
+    },
+    "total": 85.0418354,
+    "count": 1,
+    "self": 0.02147709999998426,
+    "children": {
+        "run_training.setup": {
+            "total": 0.6568868999999999,
+            "count": 1,
+            "self": 0.6568868999999999
+        },
+        "TrainerController.start_learning": {
+            "total": 84.36347140000001,
+            "count": 1,
+            "self": 0.00033940000001564385,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 84.3630858,
+                    "count": 1,
+                    "self": 84.3630858
+                },
+                "TrainerController._save_models": {
+                    "total": 4.619999999988522e-05,
+                    "count": 1,
+                    "self": 4.619999999988522e-05
+                }
+            }
+        }
+    }
+}

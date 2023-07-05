@@ -676,9 +676,11 @@ MonoBehaviour:
   GuardControllers: []
   PlayerSpawns:
   - {fileID: 7097500359997610692}
+  SecurityCameras: []
+  SmartGuardAgent: {fileID: 0}
   GuardCheckpointScriptParent:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1055291410}
+  - {fileID: 819477957}
 --- !u!4 &694955705
 Transform:
   m_ObjectHideFlags: 0

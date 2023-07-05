@@ -69,7 +69,7 @@ public class PlayerController : PrisonnerController
             //Vector3 newPosition = rb.position + transform.TransformDirection(movement);
             //rb.MovePosition(newPosition);
             var moveDirection = new Vector3(horizontal, 0, vertical);
-            var globalMoveDirection = transform.TransformDirection(moveDirection) * MoveSpeed * (IsRunning ? 2 : 1);
+            var globalMoveDirection = transform.TransformDirection(moveDirection) * GameSettings.PlayerSpeed * (IsRunning ? 2 : 1);
             rb.velocity = new Vector3(globalMoveDirection.x, rb.velocity.y, globalMoveDirection.z);
         }
         else
