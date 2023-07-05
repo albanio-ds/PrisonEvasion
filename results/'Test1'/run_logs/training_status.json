@@ -1,0 +1,29 @@
+{
+    "SmartAgentBehavior": {
+        "checkpoints": [
+            {
+                "steps": 35216,
+                "file_path": "results\\'Test1'\\SmartAgentBehavior\\SmartAgentBehavior-35216.onnx",
+                "reward": -427.100000222524,
+                "creation_time": 1688513268.860609,
+                "auxillary_file_paths": [
+                    "results\\'Test1'\\SmartAgentBehavior\\SmartAgentBehavior-35216.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 35216,
+            "file_path": "results\\'Test1'\\SmartAgentBehavior.onnx",
+            "reward": -427.100000222524,
+            "creation_time": 1688513268.860609,
+            "auxillary_file_paths": [
+                "results\\'Test1'\\SmartAgentBehavior\\SmartAgentBehavior-35216.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.29.0",
+        "torch_version": "1.7.0+cu110"
+    }
+}

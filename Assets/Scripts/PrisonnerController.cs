@@ -7,7 +7,7 @@ public class PrisonnerController : MonoBehaviour
 {
     public Inventory Inventory = new Inventory();
 
-    public EventHandler OnPlayerRunning;
+    public EventHandler<Transform> OnPlayerRunning;
 
     internal Transform Spawn;
 
@@ -23,7 +23,7 @@ public class PrisonnerController : MonoBehaviour
     protected float horizontal;
     protected float vertical;
 
-    private const float RunStepFrequency = 0.15f;
+    private const float RunStepFrequency = 0.25f;
     private float RunLastUpdate;
 
     private void Start()
@@ -45,11 +45,11 @@ public class PrisonnerController : MonoBehaviour
 
     protected void BaseUpdate()
     {
-        if (IsRunning)
+        if (IsRunning && (rb.velocity.x != 0 || rb.velocity.z != 0))
         {
             if (Time.time - RunStartDate > RunStepFrequency && Time.time - RunLastUpdate > RunStepFrequency)
             {
-                OnPlayerRunning?.Invoke(this, null);
+                OnPlayerRunning?.Invoke(this, transform);
                 RunLastUpdate = Time.time;
                 Debug.Log("Run sound");
             }

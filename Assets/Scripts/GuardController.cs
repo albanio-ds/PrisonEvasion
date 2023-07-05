@@ -64,7 +64,7 @@ public class GuardController : MonoBehaviour
         float angle = Quaternion.Angle(transform.localRotation, lookRotation);
         if (angle < 0.5f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, patrolPoints[currentPoint].position, moveSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, patrolPoints[currentPoint].position, GameSettings.PlayerSpeed * Time.deltaTime);
             if (Vector3.Distance(transform.position, patrolPoints[currentPoint].position) < 0.1f)
             {
                 currentPoint++;

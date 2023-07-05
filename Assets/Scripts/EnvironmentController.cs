@@ -9,6 +9,7 @@ public class EnvironmentController : MonoBehaviour
     public GuardController[] GuardControllers;
     public Transform[] PlayerSpawns;
     public SecurityCamera[] SecurityCameras;
+    public SmartGuardAgent SmartGuardAgent;
 
     [SerializeField]
     private GameObject[] GuardCheckpointScriptParent;
@@ -22,10 +23,12 @@ public class EnvironmentController : MonoBehaviour
         BoxControllers = transform.GetComponentsInChildren<BoxController>();
         PrisonnerController = transform.GetComponentInChildren<PrisonnerController>();
         GuardControllers = transform.GetComponentsInChildren<GuardController>();
-        SecurityCameras = transform.GetComponentsInChildren<SecurityCamera>();
         UnityEngine.Assertions.Assert.IsNotNull(BoxControllers);
         UnityEngine.Assertions.Assert.IsNotNull(PrisonnerController);
         UnityEngine.Assertions.Assert.IsNotNull(GuardControllers);
+
+        SecurityCameras = transform.GetComponentsInChildren<SecurityCamera>();
+        SmartGuardAgent = transform.GetComponentInChildren<SmartGuardAgent>();
 
         foreach (var item in BoxControllers)
         {
@@ -39,7 +42,12 @@ public class EnvironmentController : MonoBehaviour
         {
             item.OnPlayerRepered += OnPlayerOnCameraCallback;
         }
+        PrisonnerController.OnPlayerRunning += OnPlayerOnCameraCallback;
+
         transform.GetComponentInChildren<ExitScript>().OnPlayerLeaving += OnPlayerLeavingCallback;
+
+        if (SmartGuardAgent != null)
+            SmartGuardAgent.OnPlayerRepered += OnPlayerReperedCallback;
 
         PlayerUIController.Instance.PlayButton.onClick.AddListener(InitGame);
         PlayerUIController.Instance.MainText.text = "";
@@ -48,6 +56,7 @@ public class EnvironmentController : MonoBehaviour
     private void OnPlayerOnCameraCallback(object sender, Transform e)
     {
         Debug.Log("On camera !!");
+        SmartGuardAgent?.PlayerOnCamera();
     }
 
     private void OnPlayerLeavingCallback(object sender, Transform player)
@@ -66,6 +75,7 @@ public class EnvironmentController : MonoBehaviour
                 PlayerUIController.Instance.MainText.color = Color.green;
                 Debug.Log("player win !");
                 CurrGameState = GameState.Win;
+                SmartGuardAgent?.PlayerWin();
             }
             else
             {
@@ -90,7 +100,7 @@ public class EnvironmentController : MonoBehaviour
         {
             item.PlayerGameOver();
         }
-        Debug.Log("Thread ID :"+System.Threading.Thread.CurrentThread.ManagedThreadId);
+        SmartGuardAgent?.PlayerGameOver();
         PlayerUIController.Instance.MainText.text = "Lose !";
         PlayerUIController.Instance.PlayButton.gameObject.SetActive(true);
         PlayerUIController.Instance.MainText.color = Color.red;
@@ -146,5 +156,11 @@ public class EnvironmentController : MonoBehaviour
         PrisonnerController.Spawn = PlayerSpawns[Random.Range(0, PlayerSpawns.Length)];
         PrisonnerController.Init();
         CurrGameState = GameState.Playing;
+        SmartGuardAgent?.CustomStart();
     }
+}
+
+public static class GameSettings
+{
+    public const float PlayerSpeed = 3.5f;
 }
