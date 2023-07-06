@@ -153,7 +153,7 @@ public class EnvironmentController : MonoBehaviour
             if (CurrGameState != GameState.Playing)
             {
                 NotPlaying++;
-                if (NotPlaying == 50)
+                if (NotPlaying == 30)
                 {
                     InitGame();
                 }
