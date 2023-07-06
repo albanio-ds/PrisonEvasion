@@ -23,7 +23,7 @@ public class BotController : PrisonnerController
     internal override void Init()
     {
         RandomIterations = 0;
-        BoxesOrder = 0;
+        BoxesOrder = Random.Range(0, Boxes.Length);
         ExitChoosen = Random.Range(0, Exits.Length);
         base.Init();
     }
@@ -59,12 +59,12 @@ public class BotController : PrisonnerController
             Vector3 target = Boxes[BoxesOrder].transform.localPosition - transform.localPosition;
             horizontal = target.normalized.x;
             vertical = target.normalized.z;
-            if (BoxesOrder < Boxes.Length - 1)
+            if (BoxesOrder < Boxes.Length)
             {
-                if (Vector3.Distance(transform.localPosition, Boxes[BoxesOrder].transform.localPosition) < 1f)
+                if (Vector3.Distance(transform.localPosition, Boxes[BoxesOrder].transform.localPosition) < .7f)
                 {
                     Debug.Log("Too close");
-                    BoxesOrder++;
+                    BoxesOrder = (BoxesOrder + 1) % Boxes.Length;
                 }
             }
         }
