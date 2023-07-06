@@ -75,13 +75,11 @@ public class SmartGuardAgent : Agent
     {
         sensor.AddObservation(transform.localPosition);
         sensor.AddObservation(transform.localRotation);
-        sensor.AddObservation(Time.time);
         sensor.AddObservation(ExitPositions[0]);
         sensor.AddObservation(ExitPositions[1]);
-        if (!float.IsNaN(LastTimeSeen))
+        if (LastTimeSeen != 0 && Time.time - LastTimeSeen > 2.0f)
         {
             sensor.AddObservation(LastPositionObserved);
-            sensor.AddObservation(LastTimeSeen);
         }
     }
 
