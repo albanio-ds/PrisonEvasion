@@ -4,6 +4,12 @@ using UnityEngine;
 public class PlayerController : PrisonnerController
 {
     private bool PlayerPlaying = false;
+
+    private void Start()
+    {
+        base.BaseStart();
+    }
+
     internal override void Init()
     {
         base.Init();

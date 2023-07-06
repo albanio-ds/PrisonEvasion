@@ -26,7 +26,7 @@ public class PrisonnerController : MonoBehaviour
     private const float RunStepFrequency = 0.25f;
     private float RunLastUpdate;
 
-    private void Start()
+    protected void BaseStart()
     {
         rb = GetComponent<Rigidbody>();
         UnityEngine.Assertions.Assert.IsNotNull(rb);
@@ -36,7 +36,7 @@ public class PrisonnerController : MonoBehaviour
 
     internal virtual void Init()
     {
-        transform.localPosition = Spawn.position;
+        transform.localPosition = Spawn.localPosition;
         transform.localRotation = Quaternion.LookRotation(Spawn.forward);
         CanMove = true;
         IsRunning = false;
