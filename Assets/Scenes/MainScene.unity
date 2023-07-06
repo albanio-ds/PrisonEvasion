@@ -3009,6 +3009,10 @@ MonoBehaviour:
   BoxControllers: []
   PrisonnerController: {fileID: 0}
   GuardControllers: []
+  PlayerSpawns: []
+  SecurityCameras: []
+  SmartGuardAgent: {fileID: 0}
+  GuardCheckpointScriptParent: []
 --- !u!1 &1841169534
 GameObject:
   m_ObjectHideFlags: 0

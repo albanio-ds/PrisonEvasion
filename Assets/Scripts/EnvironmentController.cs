@@ -18,6 +18,8 @@ public class EnvironmentController : MonoBehaviour
 
     GameState CurrGameState = GameState.None;
 
+    private bool PlayerMap = false;
+
     private void Start()
     {
         BoxControllers = transform.GetComponentsInChildren<BoxController>();
@@ -26,7 +28,8 @@ public class EnvironmentController : MonoBehaviour
         UnityEngine.Assertions.Assert.IsNotNull(BoxControllers);
         UnityEngine.Assertions.Assert.IsNotNull(PrisonnerController);
         UnityEngine.Assertions.Assert.IsNotNull(GuardControllers);
-
+        PlayerMap = PrisonnerController is PlayerController;
+        Debug.Log("Player map" + PlayerMap);
         SecurityCameras = transform.GetComponentsInChildren<SecurityCamera>();
         SmartGuardAgent = transform.GetComponentInChildren<SmartGuardAgent>();
 
@@ -49,8 +52,11 @@ public class EnvironmentController : MonoBehaviour
         if (SmartGuardAgent != null)
             SmartGuardAgent.OnPlayerRepered += OnPlayerReperedCallback;
 
-        PlayerUIController.Instance.PlayButton.onClick.AddListener(InitGame);
-        PlayerUIController.Instance.MainText.text = "";
+        if (PlayerMap)
+        {
+            PlayerUIController.Instance.PlayButton.onClick.AddListener(InitGame);
+            PlayerUIController.Instance.MainText.text = "";
+        }
     }
 
     private void OnPlayerOnCameraCallback(object sender, Transform e)
@@ -70,16 +76,23 @@ public class EnvironmentController : MonoBehaviour
         {
             if (controller.Inventory.Contains(typeof(ExitKey)))
             {
-                PlayerUIController.Instance.MainText.text = "Win !";
-                PlayerUIController.Instance.PlayButton.gameObject.SetActive(true);
-                PlayerUIController.Instance.MainText.color = Color.green;
+                if (PlayerMap)
+                {
+                    PlayerUIController.Instance.MainText.text = "Win !";
+                    PlayerUIController.Instance.PlayButton.gameObject.SetActive(true);
+                    PlayerUIController.Instance.MainText.color = Color.green;
+                }
                 Debug.Log("player win !");
                 CurrGameState = GameState.Win;
                 SmartGuardAgent?.PlayerWin();
             }
             else
             {
-                PlayerUIController.Instance.MainText.text = "You must find a key first.";
+                Debug.Log("You must find a key first");
+                if (PlayerMap)
+                {
+                    PlayerUIController.Instance.MainText.text = "You must find a key first.";
+                }
             }
         }
     }
@@ -101,9 +114,12 @@ public class EnvironmentController : MonoBehaviour
             item.PlayerGameOver();
         }
         SmartGuardAgent?.PlayerGameOver();
-        PlayerUIController.Instance.MainText.text = "Lose !";
-        PlayerUIController.Instance.PlayButton.gameObject.SetActive(true);
-        PlayerUIController.Instance.MainText.color = Color.red;
+        if (PlayerMap)
+        {
+            PlayerUIController.Instance.MainText.text = "Lose !";
+            PlayerUIController.Instance.PlayButton.gameObject.SetActive(true);
+            PlayerUIController.Instance.MainText.color = Color.red;
+        }
     }
 
     private void OnKeyFoundCallback(object sender, Transform player)
@@ -128,17 +144,37 @@ public class EnvironmentController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P) && PlayerMap)
         {
             InitGame();
         }
+        else if (!PlayerMap)
+        {
+            if (CurrGameState != GameState.Playing)
+            {
+                NotPlaying++;
+                if (NotPlaying == 50)
+                {
+                    InitGame();
+                }
+            }
+            else
+            {
+                NotPlaying = 0;
+            }
+        }
     }
+
+    private int NotPlaying;
 
     public void InitGame()
     {
-        PlayerUIController.Instance.InventoryText.text = "";
-        PlayerUIController.Instance.MainText.text = "";
-        PlayerUIController.Instance.PlayButton.gameObject.SetActive(false);
+        if (PlayerMap)
+        {
+            PlayerUIController.Instance.InventoryText.text = "";
+            PlayerUIController.Instance.MainText.text = "";
+            PlayerUIController.Instance.PlayButton.gameObject.SetActive(false);
+        }
         int selected = Random.Range(0, BoxControllers.Length);
         for (int i = 0; i < BoxControllers.Length; i++)
         {
@@ -146,7 +182,7 @@ public class EnvironmentController : MonoBehaviour
         }
         for (int i = 0; i < GuardControllers.Length; i++)
         {
-            var checkpts = GuardCheckpointScriptParent[i].GetComponentsInChildren<Transform>(false).Where(curent => curent != GuardCheckpointScriptParent[i].transform) .Select(guard => guard.transform).ToArray();
+            var checkpts = GuardCheckpointScriptParent[i].GetComponentsInChildren<Transform>(false).Where(curent => curent != GuardCheckpointScriptParent[i].transform).Select(guard => guard.transform).ToArray();
             GuardControllers[i].Init(checkpts, (uint)Random.Range(0, checkpts.Length));
         }
         for (int i = 0; i < SecurityCameras.Length; i++)
