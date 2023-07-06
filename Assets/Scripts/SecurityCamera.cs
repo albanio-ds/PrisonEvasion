@@ -9,6 +9,7 @@ public class SecurityCamera : MonoBehaviour
     private float LastFoundDate;
 
     public PrisonnerController PlayerControllerInstance { get; private set; }
+    public bool Movable = false;
 
     [SerializeField]
     private Transform CameraHead;
@@ -32,6 +33,11 @@ public class SecurityCamera : MonoBehaviour
         Active = false;
     }
 
+    private const int MaxRotations = 250;
+    private const int StaticRotation = 35;
+    private int CurrentRotations = (StaticRotation + MaxRotations) / 2;
+    private bool PositiveRotation = true;
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -49,5 +55,23 @@ public class SecurityCamera : MonoBehaviour
                 }
             }
         }
+        if (Movable)
+        {
+            Rotate();
+        }
+    }
+    private const float CameraSpeed = 25.0f;
+    private void Rotate()
+    {
+        if (CurrentRotations > StaticRotation)
+        {
+            transform.localEulerAngles += Vector3.up * Time.deltaTime * (PositiveRotation ? CameraSpeed : -CameraSpeed);
+            if (CurrentRotations % MaxRotations == 0)
+            {
+                PositiveRotation = !PositiveRotation;
+                CurrentRotations = 0;
+            }
+        }
+        CurrentRotations++;
     }
 }
