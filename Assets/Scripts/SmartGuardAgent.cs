@@ -5,6 +5,7 @@ using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using System;
 using Unity.MLAgents.Actuators;
+using System.Linq;
 
 public class SmartGuardAgent : Agent
 {
@@ -20,10 +21,15 @@ public class SmartGuardAgent : Agent
     public const float detectionDistance = 15f;
     private Rigidbody rb { set; get; }
 
+    private Vector3[] ExitPositions;
+
     // Start is called before the first frame u
     // pdate
     void Start()
     {
+        ExitPositions = transform.parent.GetComponentsInChildren<ExitScript>().Select(exit => exit.transform.localPosition).ToArray();
+        UnityEngine.Assertions.Assert.IsNotNull(ExitPositions);
+        UnityEngine.Assertions.Assert.AreEqual(2, ExitPositions.Length);
         DecisionRequester = GetComponent<DecisionRequester>();
         Stop();
         UnityEngine.Assertions.Assert.IsNotNull(DecisionRequester);
@@ -70,6 +76,8 @@ public class SmartGuardAgent : Agent
         sensor.AddObservation(transform.localPosition);
         sensor.AddObservation(transform.localRotation);
         sensor.AddObservation(Time.time);
+        sensor.AddObservation(ExitPositions[0]);
+        sensor.AddObservation(ExitPositions[1]);
         if (!float.IsNaN(LastTimeSeen))
         {
             sensor.AddObservation(LastPositionObserved);
