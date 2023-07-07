@@ -61,7 +61,7 @@ public class PlayerController : PrisonnerController
 
             float rotationX = playerCamera.localRotation.eulerAngles.x;
             float newRotationX = rotationX - mouseY * lookSpeed;
-            newRotationX = Mathf.Clamp(newRotationX, 0, 90f);
+            //newRotationX = Mathf.Clamp(newRotationX, 0, 90f);
             playerCamera.localRotation = Quaternion.Euler(newRotationX, 0f, 0f);
         }
         base.BaseUpdate();
