@@ -2052,6 +2052,8 @@ MonoBehaviour:
   - {fileID: 1668398191}
   - {fileID: 1849018265}
   - {fileID: 1433417200}
+  SecurityCameras: []
+  SmartGuardAgent: {fileID: 0}
   GuardCheckpointScriptParent:
   - {fileID: 636111806}
 --- !u!1001 &1726557552
@@ -2064,6 +2066,10 @@ PrefabInstance:
     - target: {fileID: 8128274048788378359, guid: 2870329a73f2a7a44a04ad27a042e72c, type: 3}
       propertyPath: m_Name
       value: Cell (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8128274048788378359, guid: 2870329a73f2a7a44a04ad27a042e72c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8139865494230917995, guid: 2870329a73f2a7a44a04ad27a042e72c, type: 3}
       propertyPath: m_RootOrder
