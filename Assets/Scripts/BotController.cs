@@ -6,11 +6,12 @@ public class BotController : PrisonnerController
 {
 
     private int RandomIterations;
-    private const int RandomIterationsMax = 200;
+    private const int RandomIterationsMax = 100;
 
     private BoxController[] Boxes;
     private ExitScript[] Exits;
     private int BoxesOrder = 0;
+    private int ExitChoosen = 0;
 
     private void Start()
     {
@@ -22,7 +23,8 @@ public class BotController : PrisonnerController
     internal override void Init()
     {
         RandomIterations = 0;
-        BoxesOrder = 0;
+        BoxesOrder = Random.Range(0, Boxes.Length);
+        ExitChoosen = Random.Range(0, Exits.Length);
         base.Init();
     }
 
@@ -48,7 +50,7 @@ public class BotController : PrisonnerController
         }
         else if (Inventory.Contains(typeof(ExitKey)))
         {
-            Vector3 target = Exits[0].transform.localPosition - transform.localPosition;
+            Vector3 target = Exits[ExitChoosen].transform.localPosition - transform.localPosition;
             horizontal = target.normalized.x;
             vertical = target.normalized.z;
         }
@@ -57,17 +59,16 @@ public class BotController : PrisonnerController
             Vector3 target = Boxes[BoxesOrder].transform.localPosition - transform.localPosition;
             horizontal = target.normalized.x;
             vertical = target.normalized.z;
-            if (BoxesOrder < Boxes.Length - 1)
+            if (BoxesOrder < Boxes.Length)
             {
-                if (Vector3.Distance(transform.localPosition, Boxes[BoxesOrder].transform.localPosition) < .5f)
+                if (Vector3.Distance(transform.localPosition, Boxes[BoxesOrder].transform.localPosition) < .7f)
                 {
                     Debug.Log("Too close");
-                    BoxesOrder++;
+                    BoxesOrder = (BoxesOrder + 1) % Boxes.Length;
                 }
             }
         }
         Vector3 moveDirection = new Vector3(horizontal, 0, vertical);
-        var globalMoveDirection = transform.TransformDirection(moveDirection) * GameSettings.PlayerSpeed * (IsRunning ? 2 : 1);
-        rb.velocity = new Vector3(globalMoveDirection.x, rb.velocity.y, globalMoveDirection.z);
+        rb.velocity = new Vector3(moveDirection.x, rb.velocity.y, moveDirection.z);
     }
 }
