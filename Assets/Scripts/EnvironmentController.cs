@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -74,14 +75,17 @@ public class EnvironmentController : MonoBehaviour
         {
             if (controller.Inventory.Contains(typeof(ExitKey)))
             {
+                CurrGameState = GameState.Win;
+                SmartGuardAgent?.PlayerWin();
                 if (PlayerMap)
                 {
                     PlayerUIController.Instance.MainText.text = "Win !";
-                    PlayerUIController.Instance.PlayButton.gameObject.SetActive(true);
+                    // PlayerUIController.Instance.PlayButton.gameObject.SetActive(true);
                     PlayerUIController.Instance.MainText.color = Color.green;
+#if !UNITY_EDITOR
+                    LoadNextScene();
+#endif
                 }
-                CurrGameState = GameState.Win;
-                SmartGuardAgent?.PlayerWin();
             }
             else
             {
@@ -90,6 +94,18 @@ public class EnvironmentController : MonoBehaviour
                     PlayerUIController.Instance.MainText.text = "You must find a key first.";
                 }
             }
+        }
+    }
+
+    private void LoadNextScene()
+    {
+        if (SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCountInBuildSettings - 1)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1, LoadSceneMode.Single);
+        }
+        else
+        {
+            PlayerUIController.Instance.MainText.text = "You are free !\nP to replay.";
         }
     }
 
@@ -128,7 +144,10 @@ public class EnvironmentController : MonoBehaviour
         if (controller != null)
         {
             controller.Inventory.EquipItem(new ExitKey());
-            PlayerUIController.Instance.InventoryText.text += "Key\n";
+            if (PlayerMap)
+            {
+                PlayerUIController.Instance.InventoryText.text += "Key\n";
+            }
         }
     }
 
@@ -166,6 +185,13 @@ public class EnvironmentController : MonoBehaviour
     {
         if (PlayerMap)
         {
+#if !UNITY_EDITOR
+            if (SceneManager.GetActiveScene().buildIndex == SceneManager.sceneCountInBuildSettings - 1 && CurrGameState == GameState.Win)
+            {
+                SceneManager.LoadScene(0);
+                return;
+            }
+#endif
             PlayerUIController.Instance.InventoryText.text = "";
             PlayerUIController.Instance.MainText.text = "";
             PlayerUIController.Instance.PlayButton.gameObject.SetActive(false);
