@@ -51,7 +51,6 @@ public class PrisonnerController : MonoBehaviour
             {
                 OnPlayerRunning?.Invoke(this, transform);
                 RunLastUpdate = Time.time;
-                Debug.Log("Run sound");
             }
         }
     }
