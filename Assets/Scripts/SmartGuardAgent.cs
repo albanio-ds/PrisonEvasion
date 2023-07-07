@@ -160,7 +160,6 @@ public class SmartGuardAgent : Agent
                 {
                     if (Vector3.Dot(transform.forward, (raycastHit.transform.position - transform.position).normalized) > .55f)
                     {
-                        //Debug.Log("Found");
                         OnPlayerRepered?.Invoke(this, raycastHit.transform);
                     }
                 }

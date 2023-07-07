@@ -29,7 +29,6 @@ public class EnvironmentController : MonoBehaviour
         UnityEngine.Assertions.Assert.IsNotNull(PrisonnerController);
         UnityEngine.Assertions.Assert.IsNotNull(GuardControllers);
         PlayerMap = PrisonnerController is PlayerController;
-        Debug.Log("Player map" + PlayerMap);
         SecurityCameras = transform.GetComponentsInChildren<SecurityCamera>();
         SmartGuardAgent = transform.GetComponentInChildren<SmartGuardAgent>();
 
@@ -61,7 +60,6 @@ public class EnvironmentController : MonoBehaviour
 
     private void OnPlayerOnCameraCallback(object sender, Transform e)
     {
-        Debug.Log("On camera !!");
         SmartGuardAgent?.PlayerOnCamera();
     }
 
@@ -82,13 +80,11 @@ public class EnvironmentController : MonoBehaviour
                     PlayerUIController.Instance.PlayButton.gameObject.SetActive(true);
                     PlayerUIController.Instance.MainText.color = Color.green;
                 }
-                Debug.Log("player win !");
                 CurrGameState = GameState.Win;
                 SmartGuardAgent?.PlayerWin();
             }
             else
             {
-                Debug.Log("You must find a key first");
                 if (PlayerMap)
                 {
                     PlayerUIController.Instance.MainText.text = "You must find a key first.";
@@ -132,7 +128,6 @@ public class EnvironmentController : MonoBehaviour
         if (controller != null)
         {
             controller.Inventory.EquipItem(new ExitKey());
-            Debug.Log("key found !");
             PlayerUIController.Instance.InventoryText.text += "Key\n";
         }
     }

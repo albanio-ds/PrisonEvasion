@@ -63,7 +63,6 @@ public class BotController : PrisonnerController
             {
                 if (Vector3.Distance(transform.localPosition, Boxes[BoxesOrder].transform.localPosition) < .7f)
                 {
-                    Debug.Log("Too close");
                     BoxesOrder = (BoxesOrder + 1) % Boxes.Length;
                 }
             }
